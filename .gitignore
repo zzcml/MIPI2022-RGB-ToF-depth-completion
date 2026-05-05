@@ -1,33 +1,4 @@
 ```
-# Temp directories
-da2_temp/
-lotus_temp/
-
-# Python cache
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-
-# Dependencies and builds
-venv/
-.venv/
-.env
-.env.local
-.env.*
-
-# Logs
-*.log
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
 ```
