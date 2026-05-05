@@ -85,12 +85,26 @@ class RoboDepthPseudoLabelDataset(Dataset):
     
     def _default_transform(self) -> Callable:
         """Create default image transform."""
-        from torchvision import transforms
-        return transforms.Compose([
-            transforms.Resize(self.img_size),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
+        # Use basic transforms without torchvision dependency
+        def transform(image):
+            import torch
+            import numpy as np
+            from PIL import Image
+            
+            # Resize
+            img = image.resize(self.img_size, Image.BILINEAR)
+            
+            # Convert to tensor
+            img_tensor = torch.from_numpy(np.array(img)).permute(2, 0, 1).float() / 255.0
+            
+            # Normalize with ImageNet stats
+            mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
+            std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
+            img_tensor = (img_tensor - mean) / std
+            
+            return img_tensor
+        
+        return transform
     
     def __len__(self) -> int:
         return len(self.image_paths)
