@@ -6,16 +6,33 @@ __pycache__/
 *.pyd
 
 # Dependencies
-.venv/
 venv/
-env/
-pip-log.txt
-pip-delete-this-directory.txt
+.venv/
+.env
+.env.local
+*.env.*
 
-# Build/dist
+# Logs
+*.log
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
 build/
 dist/
-*.egg
 *.egg-info/
-MANIFEST
 ```
