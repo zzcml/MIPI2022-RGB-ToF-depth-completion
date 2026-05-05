@@ -15,6 +15,7 @@ from .train_utils import (
     compute_normal_metrics,
 )
 from .config import PseudoLabelTrainingConfig
+from .pipeline_wrapper import Lotus2PipelineWrapper, resize_image, resize_to_multiple_of_16
 
 __all__ = [
     "Lotus2Teacher",
@@ -27,4 +28,7 @@ __all__ = [
     "compute_depth_metrics",
     "compute_normal_metrics",
     "PseudoLabelTrainingConfig",
+    "Lotus2PipelineWrapper",
+    "resize_image",
+    "resize_to_multiple_of_16",
 ]
