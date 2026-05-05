@@ -1,1 +1,21 @@
-Nothing to output - the changes only include a README.md file which is a source/config file, and there are no build artifacts, dependencies, or temp files in the provided changes.
+```
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Dependencies
+.venv/
+venv/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build/dist
+build/
+dist/
+*.egg
+*.egg-info/
+MANIFEST
+```

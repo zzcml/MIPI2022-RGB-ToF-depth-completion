@@ -3,6 +3,27 @@ Configuration for RoboDepth Zoo Model Training
 
 Defines configuration dataclass and model zoo registry for RoboDepth models.
 Reference: https://github.com/worldbench/RoboDepth
+
+The RoboDepth zoo contains multiple depth estimation model implementations:
+- CADepth: Context-Aware Depth estimation
+- DIFFNet: Differential Image Feature Fusion Network
+- DNet: Deep Neural Network for depth estimation
+- DepthHints: Self-supervised depth estimation with hints
+- DynaDepth: Dynamic depth estimation with IMU
+- EPCDepth: Edge-Preserving Completion for depth
+- FSRE-Depth: Few-Shot Representation Enhancement
+- GCNDepth: Graph Convolutional Network for depth
+- HR-Depth: High-Resolution depth estimation
+- Insta-DM: Instant Depth Mapping
+- Lite-Mono: Lightweight monocular depth estimation
+- ManyDepth: Multi-frame depth estimation
+- MaskOcc: Masked Occlusion handling
+- MonoDepth2: Classic self-supervised depth estimation
+- MonoViT: Vision Transformer for monocular depth
+- PackNet-SfM: Packing networks for Structure from Motion
+- RA-Depth: Resolution-Aware depth estimation
+- SGDepth: Semantic-Guided depth estimation
+- TriDepth: Triple-frame depth estimation
 """
 
 from dataclasses import dataclass, field
@@ -11,50 +32,261 @@ import os
 
 
 # RoboDepth Model Zoo Registry
-# Based on models available in RoboDepth repository
+# Based on models available in RoboDepth repository (https://github.com/worldbench/RoboDepth/tree/main/zoo)
 MODEL_ZOO_REGISTRY: Dict[str, Dict] = {
-    # Base models from RoboDepth
-    "robodepth_resnet50": {
-        "name": "ResNet-50",
+    # ============================================
+    # Self-Supervised Monocular Depth Estimation
+    # ============================================
+    
+    # MonoDepth2 - Classic baseline
+    "monodepth2_resnet18": {
+        "name": "MonoDepth2 (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Digging into Self-Supervised Monocular Depth Estimation (ICCV 2019)",
+        "zoo_path": "zoo/MonoDepth2",
+        "description": "Classic self-supervised monocular depth estimation baseline"
+    },
+    "monodepth2_resnet50": {
+        "name": "MonoDepth2 (ResNet-50)",
         "architecture": "resnet",
         "depth": 50,
-        "pretrained": True,
-        "description": "ResNet-50 based depth estimation model"
+        "method": "self-supervised",
+        "paper": "Digging into Self-Supervised Monocular Depth Estimation (ICCV 2019)",
+        "zoo_path": "zoo/MonoDepth2",
+        "description": "MonoDepth2 with deeper ResNet-50 encoder"
     },
-    "robodepth_resnet101": {
-        "name": "ResNet-101",
+    
+    # DepthHints - Self-supervised with depth hints
+    "depthhints_resnet18": {
+        "name": "DepthHints (ResNet-18)",
         "architecture": "resnet",
-        "depth": 101,
-        "pretrained": True,
-        "description": "ResNet-101 based depth estimation model"
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Self-Supervised Monocular Depth Hints (ICCV 2019)",
+        "zoo_path": "zoo/DepthHints",
+        "description": "Self-supervised depth estimation with precomputed depth hints"
     },
-    "robodepth_dinov2_base": {
-        "name": "DINOv2 Base",
-        "architecture": "dinov2",
-        "variant": "base",
-        "pretrained": True,
-        "description": "DINOv2 ViT-Base based depth estimation model"
+    
+    # DNet - Deep Neural Network
+    "dnet_resnet18": {
+        "name": "DNet (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Deep Neural Network for Monocular Depth Estimation (IROS 2020)",
+        "zoo_path": "zoo/DNet",
+        "description": "Deep neural network based depth estimation"
     },
-    "robodepth_dinov2_large": {
-        "name": "DINOv2 Large",
-        "architecture": "dinov2",
-        "variant": "large",
-        "pretrained": True,
-        "description": "DINOv2 ViT-Large based depth estimation model (Recommended for Teacher)"
+    
+    # MaskOcc - Masked Occlusion handling
+    "maskocc_resnet18": {
+        "name": "MaskOcc (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Handling Occlusions with Masking (arXiv 2019)",
+        "zoo_path": "zoo/MaskOcc",
+        "description": "Self-supervised depth estimation with occlusion masking"
     },
-    "robodepth_vit_small": {
-        "name": "ViT Small",
+    
+    # CADepth - Context-Aware Depth
+    "cadepth_resnet18": {
+        "name": "CADepth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Context-Aware Depth Estimation (3DV 2021)",
+        "zoo_path": "zoo/CADepth",
+        "description": "Context-aware depth estimation with spatial propagation"
+    },
+    
+    # HR-Depth - High-Resolution
+    "hrdepth_resnet18": {
+        "name": "HR-Depth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "High-Resolution Depth Estimation (AAAI 2021)",
+        "zoo_path": "zoo/HR-Depth",
+        "description": "High-resolution feature aggregation for depth estimation"
+    },
+    "hrdepth_mobilenetv3": {
+        "name": "HR-Depth (MobileNetV3)",
+        "architecture": "mobilenet",
+        "variant": "v3",
+        "method": "self-supervised",
+        "paper": "High-Resolution Depth Estimation (AAAI 2021)",
+        "zoo_path": "zoo/HR-Depth",
+        "description": "Lightweight HR-Depth with MobileNetV3 encoder"
+    },
+    
+    # DIFFNet - Differential Image Feature Fusion
+    "diffnet_resnet18": {
+        "name": "DIFFNet (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Differential Image Feature Fusion Network (BMVC 2021)",
+        "zoo_path": "zoo/DIFFNet",
+        "description": "Differential feature fusion for improved depth estimation"
+    },
+    "diffnet_hrnet": {
+        "name": "DIFFNet (HRNet)",
+        "architecture": "hrnet",
+        "method": "self-supervised",
+        "paper": "Differential Image Feature Fusion Network (BMVC 2021)",
+        "zoo_path": "zoo/DIFFNet",
+        "description": "DIFFNet with High-Resolution Network encoder"
+    },
+    
+    # ManyDepth - Multi-frame
+    "manydepth_resnet18": {
+        "name": "ManyDepth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "The Many Depths of Self-Supervised Learning (CVPR 2021)",
+        "zoo_path": "zoo/ManyDepth",
+        "description": "Multi-frame self-supervised depth estimation"
+    },
+    
+    # FSRE-Depth - Few-Shot Representation Enhancement
+    "fsre_depth_resnet18": {
+        "name": "FSRE-Depth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Few-Shot Representation Enhancement (ICCV 2021)",
+        "zoo_path": "zoo/FSRE-Depth",
+        "description": "Few-shot representation enhancement for depth estimation"
+    },
+    
+    # Insta-DM - Instant Depth Mapping
+    "instadm_resnet18": {
+        "name": "Insta-DM (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Instant Depth Mapping (AAAI 2021)",
+        "zoo_path": "zoo/Insta-DM",
+        "description": "Fast instant depth mapping with temporal consistency"
+    },
+    
+    # DynaDepth - Dynamic with IMU
+    "dynadepth_resnet18": {
+        "name": "DynaDepth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised+imu",
+        "paper": "Dynamic Depth Estimation with IMU (ECCV 2022)",
+        "zoo_path": "zoo/DynaDepth",
+        "description": "Dynamic depth estimation fused with IMU measurements"
+    },
+    
+    # RA-Depth - Resolution-Aware
+    "radepth_resnet18": {
+        "name": "RA-Depth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Resolution-Aware Depth Estimation (ECCV 2022)",
+        "zoo_path": "zoo/RA-Depth",
+        "description": "Resolution-aware multi-scale feature fusion"
+    },
+    "radepth_hrnet": {
+        "name": "RA-Depth (HRNet)",
+        "architecture": "hrnet",
+        "method": "self-supervised",
+        "paper": "Resolution-Aware Depth Estimation (ECCV 2022)",
+        "zoo_path": "zoo/RA-Depth",
+        "description": "RA-Depth with High-Resolution Network encoder"
+    },
+    
+    # Lite-Mono - Lightweight
+    "litemono_resnet18": {
+        "name": "Lite-Mono (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Lite-Mono: Lightweight Monocular Depth Estimation (CVPR 2023)",
+        "zoo_path": "zoo/Lite-Mono",
+        "description": "Lightweight and efficient monocular depth estimation"
+    },
+    
+    # MonoViT - Vision Transformer
+    "monovit_mpvit": {
+        "name": "MonoViT (MPViT)",
         "architecture": "vit",
-        "variant": "small",
-        "pretrained": True,
-        "description": "Vision Transformer Small for depth estimation"
+        "variant": "mpvit",
+        "method": "self-supervised",
+        "paper": "Vision Transformer for Self-Supervised Depth Estimation (3DV 2022)",
+        "zoo_path": "zoo/MonoViT",
+        "description": "Multi-Path Vision Transformer for depth estimation"
     },
-    "robodepth_vit_base": {
-        "name": "ViT Base",
-        "architecture": "vit",
-        "variant": "base",
-        "pretrained": True,
-        "description": "Vision Transformer Base for depth estimation"
+    
+    # TriDepth - Triple-frame
+    "tridepth_resnet18": {
+        "name": "TriDepth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Triple-Frame Depth Estimation (WACV 2023)",
+        "zoo_path": "zoo/TriDepth",
+        "description": "Triple-frame depth estimation with semantic guidance"
+    },
+    
+    # EPCDepth - Edge-Preserving Completion
+    "epcdepth_resnet18": {
+        "name": "EPCDepth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Edge-Preserving Completion for Depth Estimation (ICCV 2021)",
+        "zoo_path": "zoo/EPCDepth",
+        "description": "Edge-preserving depth completion with RSU modules"
+    },
+    
+    # GCNDepth - Graph Convolutional Network
+    "gcndepth_resnet18": {
+        "name": "GCNDepth (ResNet-18)",
+        "architecture": "resnet+gcn",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Graph Convolutional Network for Depth Estimation",
+        "zoo_path": "zoo/GCNDepth",
+        "description": "Graph convolutional refinement for depth estimation"
+    },
+    
+    # SGDepth - Semantic-Guided
+    "sgdepth_resnet18": {
+        "name": "SGDepth (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised+semantic",
+        "paper": "Semantic-Guided Depth Estimation (arXiv 2020)",
+        "zoo_path": "zoo/SGDepth",
+        "description": "Semantic-guided multi-task depth and segmentation"
+    },
+    
+    # PackNet-SfM - Packing Networks
+    "packnet_sfm_resnet18": {
+        "name": "PackNet-SfM (ResNet-18)",
+        "architecture": "resnet",
+        "depth": 18,
+        "method": "self-supervised",
+        "paper": "Packing Networks for Structure from Motion (CVPR 2020)",
+        "zoo_path": "zoo/PackNet-SfM",
+        "description": "Efficient network packing for SfM-based depth estimation"
+    },
+    "packnet_sfm_packnet01": {
+        "name": "PackNet-SfM (PackNet01)",
+        "architecture": "packnet",
+        "method": "self-supervised",
+        "paper": "Packing Networks for Structure from Motion (CVPR 2020)",
+        "zoo_path": "zoo/PackNet-SfM",
+        "description": "Custom PackNet architecture for depth estimation"
     },
 }
 
